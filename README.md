@@ -1,6 +1,8 @@
 elasticsearch
 =============
 
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-kbrebanov.elasticsearch-660198.svg)](https://galaxy.ansible.com/list#/roles/3918)
+
 Installs and configures Elasticsearch
 
 Requirements
