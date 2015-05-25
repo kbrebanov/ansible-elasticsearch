@@ -1,2 +1,18 @@
 ---
 # tasks file for elasticsearch
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags: elasticsearch
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: elasticsearch
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: elasticsearch
+
+- name: Ensure Elasticsearch is started and enabled on boot
+  service: name={{ elasticsearch_service_name }} state=started enabled=yes
+  tags: elasticsearch

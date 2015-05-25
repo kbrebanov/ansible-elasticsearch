@@ -1,2 +1,4 @@
 ---
 # defaults file for elasticsearch
+
+elasticsearch_version: 1.5

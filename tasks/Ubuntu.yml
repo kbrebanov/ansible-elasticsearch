@@ -1,0 +1,19 @@
+---
+# tasks file for elasticsearch (Ubuntu specific)
+
+- name: Install Elasticsearch PGP key
+  apt_key: >
+    url=https://packages.elastic.co/GPG-KEY-elasticsearch
+    state=present
+  tags: elasticsearch
+
+- name: Add Elasticsearch PPA
+  apt_repository: >
+    repo='deb http://packages.elastic.co/elasticsearch/{{ elasticsearch_version }}/debian stable main'
+    state=present
+  tags: elasticsearch
+
+- name: Install Elasticsearch packages
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items: elasticsearch_packages
+  tags: elasticsearch
