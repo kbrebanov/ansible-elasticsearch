@@ -9,7 +9,7 @@
 
 - name: Add Elasticsearch PPA
   apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/{{ elasticsearch_version }}/debian stable main'
+    repo='deb http://packages.elastic.co/elasticsearch/{{ elasticsearch_version|truncate(3, True, '') }}/debian stable main'
     state=present
   tags: elasticsearch
 
