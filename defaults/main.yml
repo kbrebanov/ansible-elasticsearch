@@ -2,3 +2,8 @@
 # defaults file for elasticsearch
 
 elasticsearch_version: 1.5
+elasticsearch_cluster_name: elasticsearch
+elasticsearch_node_master: 'true'
+elasticsearch_node_data: 'true'
+elasticsearch_index_number_of_shards: 5
+elasticsearch_index_number_of_replicas: 1
