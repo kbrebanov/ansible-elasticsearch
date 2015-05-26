@@ -37,6 +37,13 @@ Install Elasticsearch
     - { role: kbrebanov.elasticsearch }
 ```
 
+Install specific version of Elasticsearch
+```
+- hosts: all
+  roles:
+    - { role: kbrebanov.elasticsearch, elasticsearch_version: 1.1.1 }
+```
+
 License
 -------
 
