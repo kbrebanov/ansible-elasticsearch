@@ -49,6 +49,18 @@
     state=present
   tags: elasticsearch
 
+- name: Add Elasticsearch 1.6 PPA
+  apt_repository: >
+    repo='deb http://packages.elastic.co/elasticsearch/1.6/debian stable main'
+    state=present
+  tags: elasticsearch
+
+- name: Add Elasticsearch 1.7 PPA
+  apt_repository: >
+    repo='deb http://packages.elastic.co/elasticsearch/1.7/debian stable main'
+    state=present
+  tags: elasticsearch
+
 - name: Install Elasticsearch packages
   apt: name={{ item }} state=present update_cache=yes
   with_items: elasticsearch_packages
