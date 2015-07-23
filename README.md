@@ -15,7 +15,7 @@ Role Variables
 
 | Name                                   | Default       | Description                                                |
 |----------------------------------------|---------------|------------------------------------------------------------|
-| elasticsearch_version                  | 1.5.2         | Version of Elasticsearch to install                        |
+| elasticsearch_version                  | 1.7.0         | Version of Elasticsearch to install                        |
 | elasticsearch_cluster_name             | elasticsearch | Cluster name identifies your cluster for auto-discovery    |
 | elasticsearch_node_master              | 'true'        | Allow this node to be eligible as a master node            |
 | elasticsearch_node_data                | 'true'        | Allow this node to store data                              |
