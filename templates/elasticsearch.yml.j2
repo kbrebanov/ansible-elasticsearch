@@ -37,7 +37,11 @@ cluster.name: {{ elasticsearch_cluster_name }}
 # Node names are generated dynamically on startup, so you're relieved
 # from configuring them manually. You can tie this node to a specific name:
 #
+{% if elasticsearch_node_name == '' %}
 #node.name: "Franz Kafka"
+{% else %}
+node.name: "{{ elasticsearch_node_name }}"
+{% endif %}
 
 # Every node can be configured to allow or deny being eligible as the master,
 # and to allow or deny to store the data.
@@ -154,7 +158,7 @@ index.number_of_replicas: {{ elasticsearch_index_number_of_replicas }}
 #
 # Set this property to true to lock the memory:
 #
-#bootstrap.mlockall: true
+bootstrap.mlockall: {{ elasticsearch_bootstrap_mlockall }}
 
 # Make sure that the ES_MIN_MEM and ES_MAX_MEM environment variables are set
 # to the same value, and that the machine has enough memory to allocate
