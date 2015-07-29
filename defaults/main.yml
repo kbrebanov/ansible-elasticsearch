@@ -8,7 +8,7 @@ elasticsearch_node_master: 'true'
 elasticsearch_node_data: 'true'
 elasticsearch_index_number_of_shards: 5
 elasticsearch_index_number_of_replicas: 1
-elasticsearch_heap_size: 256m
+elasticsearch_heap_size: 1g
 elasticsearch_heap_newsize: ''
 elasticsearch_direct_size: ''
 elasticsearch_max_open_files: 65535
