@@ -2,66 +2,92 @@
 # tasks file for elasticsearch (Ubuntu specific)
 
 - name: Install Elasticsearch PGP key
-  apt_key: >
-    url=https://packages.elastic.co/GPG-KEY-elasticsearch
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 0.90 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/0.90/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/0.90/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.0 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.0/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.0/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.1 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.1/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.1/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.2 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.2/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.2/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.3 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.3/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.3/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.4 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.4/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.4/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.5 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.5/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.5/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.6 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.6/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.6/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Add Elasticsearch 1.7 PPA
-  apt_repository: >
-    repo='deb http://packages.elastic.co/elasticsearch/1.7/debian stable main'
-    state=present
-  tags: elasticsearch
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/1.7/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
 
 - name: Install Elasticsearch packages
-  apt: name={{ item }} state=present update_cache=yes
-  with_items: elasticsearch_packages
-  tags: elasticsearch
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ elasticsearch_packages }}"
+  tags:
+    - elasticsearch
