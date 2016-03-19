@@ -81,6 +81,14 @@
   tags:
     - elasticsearch
 
+- name: Add Elasticsearch 2.x PPA
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/2.x/debian stable main'
+    state: present
+  tags:
+    - elasticsearch
+
 - name: Install Elasticsearch packages
   become: yes
   apt:

@@ -35,8 +35,8 @@
     src: elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
     owner: root
-    group: root
-    mode: 0644
+    group: elasticsearch
+    mode: 0640
   notify:
     - restart elasticsearch
   tags:
@@ -48,8 +48,8 @@
     src: logging.yml.j2
     dest: /etc/elasticsearch/logging.yml
     owner: root
-    group: root
-    mode: 0644
+    group: elasticsearch
+    mode: 0640
   notify:
     - restart elasticsearch
   tags:

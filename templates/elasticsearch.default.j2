@@ -1,58 +1,93 @@
 # {{ ansible_managed }}
 
-# Run Elasticsearch as this user ID and group ID
-ES_USER={{ elasticsearch_user }}
-ES_GROUP={{ elasticsearch_group }}
+################################
+# Elasticsearch
+################################
 
-# Heap Size (defaults to 256m min, 1g max)
-ES_HEAP_SIZE={{ elasticsearch_heap_size }}
-
-# Heap new generation
-{% if elasticsearch_heap_newsize == '' %}
-#ES_HEAP_NEWSIZE=
-{% else %}
-ES_HEAP_NEWSIZE={{ elasticsearch_heap_newsize }}
-{% endif %}
-
-# max direct memory
-{% if elasticsearch_direct_size == '' %}
-#ES_DIRECT_SIZE=
-{% else %}
-ES_DIRECT_SIZE={{ elasticsearch_direct_size }}
-{% endif %}
-
-# Maximum number of open files, defaults to 65535.
-MAX_OPEN_FILES={{ elasticsearch_max_open_files }}
-
-# Maximum locked memory size. Set to "unlimited" if you use the
-# bootstrap.mlockall option in elasticsearch.yml. You must also set
-# ES_HEAP_SIZE.
-MAX_LOCKED_MEMORY={{ elasticsearch_max_locked_memory }}
-
-# Maximum number of VMA (Virtual Memory Areas) a process can own
-MAX_MAP_COUNT={{ elasticsearch_max_map_count }}
-
-# Elasticsearch log directory
-LOG_DIR={{ elasticsearch_log_dir }}
-
-# Elasticsearch data directory
-DATA_DIR={{ elasticsearch_data_dir }}
-
-# Elasticsearch work directory
-WORK_DIR={{ elasticsearch_work_dir }}
+# Elasticsearch home directory
+ES_HOME={{ elasticsearch_home_dir }}
 
 # Elasticsearch configuration directory
 CONF_DIR={{ elasticsearch_conf_dir }}
 
-# Elasticsearch configuration file (elasticsearch.yml)
-CONF_FILE={{ elasticsearch_conf_file }}
+# Elasticsearch data directory
+DATA_DIR={{ elasticsearch_data_dir }}
+
+# Elasticsearch log directory
+LOG_DIR={{ elasticsearch_log_dir }}
+
+# Elasticsearch PID directory
+PID_DIR={{ elasticsearch_pid_dir }}
+
+# Heap size defaults to 256m min, 1g max
+# Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
+ES_HEAP_SIZE={{ elasticsearch_heap_size }}
+
+# Heap new generation
+{% if elasticsearch_heap_newsize %}
+ES_HEAP_NEWSIZE={{ elasticsearch_heap_newsize }}
+{% else %}
+#ES_HEAP_NEWSIZE=
+{% endif %}
+
+# Maximum direct memory
+{% if elasticsearch_direct_size %}
+ES_DIRECT_SIZE={{ elasticsearch_direct_size }}
+{% else %}
+#ES_DIRECT_SIZE=
+{% endif %}
 
 # Additional Java OPTS
-{% if elasticsearch_java_opts == '' %}
-#ES_JAVA_OPTS=
-{% else %}
+{% if elasticsearch_java_opts %}
 ES_JAVA_OPTS={{ elasticsearch_java_opts }}
+{% else %}
+#ES_JAVA_OPTS=
 {% endif %}
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
-RESTART_ON_UPGRADE={{ elasticsearch_restart_on_upgrade }}
+{% if elasticsearch_restart_on_upgrade %}
+ES_RESTART_ON_UPGRADE=true
+{% else %}
+ES_RESTART_ON_UPGRADE=false
+{% endif %}
+
+# Path to the GC log file
+ES_GC_LOG_FILE={{ elasticsearch_gc_log_file }}
+
+################################
+# Elasticsearch service
+################################
+
+# SysV init.d
+#
+# When executing the init script, this user will be used to run the elasticsearch service.
+# The default value is 'elasticsearch' and is declared in the init.d file.
+# Note that this setting is only used by the init script. If changed, make sure that
+# the configured user can read and write into the data, work, plugins and log directories.
+# For systemd service, the user is usually configured in file /usr/lib/systemd/system/elasticsearch.service
+ES_USER={{ elasticsearch_user }}
+ES_GROUP={{ elasticsearch_group }}
+
+# The number of seconds to wait before checking if Elasticsearch started successfully as a daemon process
+ES_STARTUP_SLEEP_TIME={{ elasticsearch_startup_sleep_time }}
+
+################################
+# System properties
+################################
+
+# Specifies the maximum file descriptor number that can be opened by this process
+# When using Systemd, this setting is ignored and the LimitNOFILE defined in
+# /usr/lib/systemd/system/elasticsearch.service takes precedence
+MAX_OPEN_FILES={{ elasticsearch_max_open_files }}
+
+# The maximum number of bytes of memory that may be locked into RAM
+# Set to "unlimited" if you use the 'bootstrap.mlockall: true' option
+# in elasticsearch.yml (ES_HEAP_SIZE  must also be set).
+# When using Systemd, the LimitMEMLOCK property must be set
+# in /usr/lib/systemd/system/elasticsearch.service
+MAX_LOCKED_MEMORY={{ elasticsearch_max_locked_memory }}
+
+# Maximum number of VMA (Virtual Memory Areas) a process can own
+# When using Systemd, this setting is ignored and the 'vm.max_map_count'
+# property is set at boot time in /usr/lib/sysctl.d/elasticsearch.conf
+MAX_MAP_COUNT={{ elasticsearch_max_map_count }}
