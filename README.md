@@ -1,7 +1,7 @@
 elasticsearch
 =============
 
-[![Ansible Role](https://img.shields.io/ansible/role/3923.svg)](https://galaxy.ansible.com/list#/roles/3923)
+[![Build Status](https://travis-ci.org/kbrebanov/ansible-elasticsearch.svg?branch=master)](https://travis-ci.org/kbrebanov/ansible-elasticsearch)
 
 Installs and configures Elasticsearch
 
