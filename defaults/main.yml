@@ -124,7 +124,7 @@ elasticsearch_network_tcp_send_buffer_size: ''
 elasticsearch_node_data: true
 elasticsearch_node_master: true
 elasticsearch_node_max_local_storage_nodes: 1
-elasticsearch_node_name: node-1
+elasticsearch_node_name: ''
 elasticsearch_node_rack: ''
 
 elasticsearch_path_data: []

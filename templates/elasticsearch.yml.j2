@@ -72,7 +72,9 @@ node.master: true
 node.master: false
 {% endif %}
 node.max_local_storage_nodes: {{ elasticsearch_node_max_local_storage_nodes }}
+{% if elasticsearch_node_name %}
 node.name: {{ elasticsearch_node_name }}
+{% endif %}
 {% if elasticsearch_node_rack %}
 node.rack: {{ elasticsearch_node_rack }}
 {% endif %}
