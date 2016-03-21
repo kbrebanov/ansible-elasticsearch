@@ -9,83 +9,93 @@
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 0.90 PPA
+- name: Add Elasticsearch 0.90 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/0.90/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('0.90', '>=') and elasticsearch_version|string|version_compare('1.0', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.0 PPA
+- name: Add Elasticsearch 1.0 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.0/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.0', '>=') and elasticsearch_version|string|version_compare('1.1', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.1 PPA
+- name: Add Elasticsearch 1.1 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.1/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.1', '>=') and elasticsearch_version|string|version_compare('1.2', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.2 PPA
+- name: Add Elasticsearch 1.2 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.2/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.2', '>=') and elasticsearch_version|string|version_compare('1.3', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.3 PPA
+- name: Add Elasticsearch 1.3 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.3/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.3', '>=') and elasticsearch_version|string|version_compare('1.4', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.4 PPA
+- name: Add Elasticsearch 1.4 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.4/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.4', '>=') and elasticsearch_version|string|version_compare('1.5', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.5 PPA
+- name: Add Elasticsearch 1.5 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.5/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.5', '>=') and elasticsearch_version|string|version_compare('1.6', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.6 PPA
+- name: Add Elasticsearch 1.6 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.6/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.6', '>=') and elasticsearch_version|string|version_compare('1.7', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 1.7 PPA
+- name: Add Elasticsearch 1.7 repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/1.7/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('1.7', '>=') and elasticsearch_version|string|version_compare('2.0', '<')
   tags:
     - elasticsearch
 
-- name: Add Elasticsearch 2.x PPA
+- name: Add Elasticsearch 2.x repository
   become: yes
   apt_repository:
     repo: 'deb http://packages.elastic.co/elasticsearch/2.x/debian stable main'
     state: present
+  when: elasticsearch_version|string|version_compare('2.0', '>=') and elasticsearch_version|string|version_compare('3.0', '<')
   tags:
     - elasticsearch
 
