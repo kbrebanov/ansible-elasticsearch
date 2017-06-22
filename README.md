@@ -15,7 +15,7 @@ Role Variables
 
 | Name                                                                       | Default                                          | Description                                                                                             |
 |:---------------------------------------------------------------------------|:-------------------------------------------------|:--------------------------------------------------------------------------------------------------------|
-| elasticsearch_version                                                      | 2.4.1                                            | Version of Elasticsearch to install                                                                     |
+| elasticsearch_version                                                      | 5.4.2                                            | Version of Elasticsearch to install                                                                     |
 | elasticsearch_action_destructive_requires_name                             | true                                             |                                                                                                         |
 | elasticsearch_bootstrap_mlockall                                           | false                                            | Set this property to true to lock the memory                                                            |
 | elasticsearch_direct_size                                                  | ''                                               | Max direct memory                                                                                       |

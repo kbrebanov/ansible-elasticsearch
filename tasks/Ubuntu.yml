@@ -99,6 +99,15 @@
   tags:
     - elasticsearch
 
+- name: Add Elasticsearch 5.x repository
+  become: yes
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/5.x/debian stable main'
+    state: present
+  when: elasticsearch_version|string|version_compare('5.0', '>=') and elasticsearch_version|string|version_compare('6.0', '<')
+  tags:
+    - elasticsearch
+
 - name: Install Elasticsearch packages
   become: yes
   apt:
