@@ -1,88 +1,53 @@
 # {{ ansible_managed }}
 
 # ======================== Elasticsearch Configuration =========================
-
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
 # ---------------------------------- Cluster -----------------------------------
 #
-{% if elasticsearch_cluster_blocks_read_only %}
-cluster.blocks.read_only: true
-{% else %}
-cluster.blocks.read_only: false
-{% endif %}
-cluster.info.update.interval: {{ elasticsearch_cluster_info_update_interval }}
+# Use a descriptive name for your cluster:
+#
+{% if elasticsearch_cluster_name %}
 cluster.name: {{ elasticsearch_cluster_name }}
-cluster.routing.allocation.allow_rebalance: {{ elasticsearch_cluster_routing_allocation_allow_rebalance }}
-{% if elasticsearch_cluster_routing_allocation_awareness_attributes %}
-cluster.routing.allocation.awareness.attributes: {{ elasticsearch_cluster_routing_allocation_awareness_attributes | join(",") }}
-{% endif %}
-{% if elasticsearch_cluster_routing_allocation_awareness_force_zone_values %}
-cluster.routing.allocation.awareness.force.zone.values: {{ elasticsearch_cluster_routing_allocation_awareness_force_zone_values | join(",") }}
-{% endif %}
-cluster.routing.allocation.balance.index: {{ elasticsearch_cluster_routing_allocation_balance_index }}
-cluster.routing.allocation.balance.shard: {{ elasticsearch_cluster_routing_allocation_balance_shard }}
-cluster.routing.allocation.balance.threshold: {{ elasticsearch_cluster_routing_allocation_balance_threshold }}
-cluster.routing.allocation.cluster_concurrent_balance: {{ elasticsearch_cluster_routing_allocation_cluster_concurrent_rebalance }}
-{% if elasticsearch_cluster_routing_allocation_disk_include_relocations %}
-cluster.routing.allocation.disk.include_relocations: true
 {% else %}
-cluster.routing.allocation.disk.include_relocations: false
+#cluster.name: my-application
 {% endif %}
-{% if elasticsearch_cluster_routing_allocation_disk_threshold_enabled %}
-cluster.routing.allocation.disk.threshold_enabled: true
-{% else %}
-cluster.routing.allocation.disk.threshold_enabled: false
-{% endif %}
-cluster.routing.allocation.disk.watermark.high: {{ elasticsearch_cluster_routing_allocation_disk_watermark_high }}
-cluster.routing.allocation.disk.watermark.low: {{ elasticsearch_cluster_routing_allocation_disk_watermark_low }}
-cluster.routing.allocation.enable: {{ elasticsearch_cluster_routing_allocation_enable }}
-{% if elasticsearch_cluster_routing_allocation_exclude %}
-{% for exclude in elasticsearch_cluster_routing_allocation_exclude %}
-cluster.routing.allocation.exclude.{{ exclude.attribute }}: {{ exclude.values | join(",") }}
-{% endfor %}
-{% endif %}
-{% if elasticsearch_cluster_routing_allocation_include %}
-{% for include in elasticsearch_cluster_routing_allocation_include %}
-cluster.routing.allocation.include.{{ include.attribute }}: {{ include.values | join(",") }}
-{% endfor %}
-{% endif %}
-cluster.routing.allocation.node_concurrent_recoveries: {{ elasticsearch_cluster_routing_allocation_node_concurrent_recoveries }}
-cluster.routing.allocation.node_initial_primaries_recoveries: {{ elasticsearch_cluster_routing_allocation_node_initial_primaries_recoveries }}
-{% if elasticsearch_cluster_routing_allocation_require %}
-{% for require in elasticsearch_cluster_routing_allocation_require %}
-cluster.routing.allocation.require.{{ require.attribute }}: {{ require.values | join(",") }}
-{% endfor %}
-{% endif %}
-{% if elasticsearch_cluster_routing_allocation_same_shard_host %}
-cluster.routing.allocation.same_shard.host: true
-{% else %}
-cluster.routing.allocation.same_shard.host: false
-{% endif %}
-cluster.routing.rebalance.enable: {{ elasticsearch_cluster_routing_rebalance_enable }}
 #
 # ------------------------------------ Node ------------------------------------
 #
-{% if elasticsearch_node_data %}
-node.data: true
-{% else %}
-node.data: false
-{% endif %}
-{% if elasticsearch_node_master %}
-node.master: true
-{% else %}
-node.master: false
-{% endif %}
-node.max_local_storage_nodes: {{ elasticsearch_node_max_local_storage_nodes }}
+# Use a descriptive name for the node:
+#
 {% if elasticsearch_node_name %}
 node.name: {{ elasticsearch_node_name }}
+{% else %}
+#node.name: node-1
 {% endif %}
-{% if elasticsearch_node_rack %}
-node.rack: {{ elasticsearch_node_rack }}
+#
+# Add custom attributes to the node:
+#
+{% if elasticsearch_node_attr_rack %}
+node.attr.rack: {{ elasticsearch_node_attr_rack }}
+{% else %}
+#node.attr.rack: r1
 {% endif %}
 #
 # ----------------------------------- Paths ------------------------------------
 #
+# Path to directory where to store the data (separate multiple locations by comma):
+#
 {% if elasticsearch_path_data %}
 path.data: {{ elasticsearch_path_data | join(",") }}
+{% else %}
+#path.data: /path/to/data
 {% endif %}
 #
 # Path to log files:
@@ -90,185 +55,69 @@ path.data: {{ elasticsearch_path_data | join(",") }}
 {% if elasticsearch_path_logs %}
 path.logs: {{ elasticsearch_path_logs | join(",") }}
 {% else %}
-# path.logs: /path/to/logs
+#path.logs: /path/to/logs
 {% endif %}
 #
 # ----------------------------------- Memory -----------------------------------
 #
 # Lock the memory on startup:
 #
-{% if elasticsearch_bootstrap_mlockall %}
-bootstrap.mlockall: true
+{% if elasticsearch_bootstrap_memory_lock %}
+bootstrap.memory_lock: true
 {% else %}
-bootstrap.mlockall: false
+bootstrap.memory_lock: false
 {% endif %}
 #
-# Make sure that the `ES_HEAP_SIZE` environment variable is set to about half the memory
-# available on the system and that the owner of the process is allowed to use this limit.
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
 #
 # Elasticsearch performs poorly when the system is swapping the memory.
 #
 # ---------------------------------- Network -----------------------------------
 #
-network.bind_host: [{% for bind_host in elasticsearch_network_bind_host %}{% if not loop.last %}"{{ bind_host }}", {% else %}"{{ bind_host }}"{% endif %}{% endfor %}]
-{% if elasticsearch_network_publish_host %}
-network.publish_host: [{% for publish_host in elasticsearch_network_publish_host %}{% if not loop.last %}"{{ publish_host }}",{% else %}"{{ publish_host }}"{% endif %}{% endfor %}]
-{% endif %}
-{% if elasticsearch_network_tcp_keep_alive %}
-network.tcp.keep_alive: true
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+{% if elasticsearch_network_host %}
+network.host: {{ elasticsearch_network_host }}
 {% else %}
-network.tcp.keep_alive: false
-{% endif %}
-{% if elasticsearch_network_tcp_no_delay %}
-network.tcp.no_delay: true
-{% else %}
-network.tcp.no_delay: false
-{% endif %}
-{% if elasticsearch_network_tcp_receive_buffer_size %}
-network.tcp.receive_buffer_size: {{ elasticsearch_network_tcp_receive_buffer_size }}
-{% endif %}
-{% if elasticsearch_network_tcp_reuse_address %}
-network.tcp.reuse_address: true
-{% else %}
-network.tcp.reuse_address: false
-{% endif %}
-{% if elasticsearch_network_tcp_send_buffer_size %}
-network.tcp.send_buffer_size: {{ elasticsearch_network_tcp_send_buffer_size }}
+#network.host: 192.168.0.1
 {% endif %}
 #
-# ----------------------------------- HTTP -------------------------------------
+# Set a custom port for HTTP:
 #
-http.bind_host: [{% for bind_host in elasticsearch_http_bind_host %}{% if not loop.last %}"{{ bind_host }}", {% else %}"{{ bind_host }}"{% endif %}{% endfor %}]
-{% if elasticsearch_http_compression %}
-http.compression: true
-{% else %}
-http.compression: false
-{% endif %}
-http.compression_level: {{ elasticsearch_http_compression_level }}
-{% if elasticsearch_http_cors_allow_credentials %}
-http.cors.allow-credentials: true
-{% else %}
-http.cors.allow-credentials: false
-{% endif %}
-http.cors.allow-headers: [{{ elasticsearch_http_cors_allow_headers | join(", ") }}]
-http.cors.allow-methods: [{{ elasticsearch_http_cors_allow_methods | join(", ") }}]
-{% if elasticsearch_http_cors_allow_origin %}
-http.cors.allow-origin: {{ elasticsearch_http_cors_allow_origin }}
-{% endif %}
-{% if elasticsearch_http_cors_enabled %}
-http.cors.enabled: true
-{% else %}
-http.cors.enabled: false
-{% endif %}
-http.cors.max-age: {{ elasticsearch_http_cors_max_age }}
-{% if elasticsearch_http_detailed_errors_enabled %}
-http.detailed_errors.enabled: true
-{% else %}
-http.detailed_errors.enabled: false
-{% endif %}
-{% if elasticsearch_http_enabled %}
-http.enabled: true
-{% else %}
-http.enabled: false
-{% endif %}
-http.host: [{% for http_host in elasticsearch_http_host %}{% if not loop.last %}"{{ http_host }}", {% else %}"{{ http_host }}"{% endif %}{% endfor %}]
-http.max_content_length: {{ elasticsearch_http_max_content_length }}
-http.max_header_size: {{ elasticsearch_http_max_header_size }}
-http.max_initial_line_length: {{ elasticsearch_http_max_initial_line_length }}
-{% if elasticsearch_http_pipelining %}
-http.pipelining: true
-{% else %}
-http.pipelining: false
-{% endif %}
-http.pipelining.max_events: {{ elasticsearch_http_pipelining_max_events }}
+{% if elasticsearch_http_port %}
 http.port: {{ elasticsearch_http_port }}
-http.publish_host: [{% for publish_host in elasticsearch_http_publish_host %}{% if not loop.last %}"{{ publish_host }}", {% else %}"{{ publish_host }}"{% endif %}{% endfor %}]
-{% if elasticsearch_http_publish_port %}
-http.publish_port: {{ elasticsearch_http_publish_port }}
+{% else %}
+#http.port: 9200
 {% endif %}
+#
+# For more information, consult the network module documentation.
 #
 # --------------------------------- Discovery ----------------------------------
 #
-discovery.zen.fd.ping_interval: {{ elasticsearch_discovery_zen_fd_ping_interval }}
-discovery.zen.fd.ping_retries: {{ elasticsearch_discovery_zen_fd_ping_retries }}
-discovery.zen.fd.ping_timeout: {{ elasticsearch_discovery_zen_fd_ping_timeout }}
-discovery.zen.join_timeout: {{ elasticsearch_discovery_zen_join_timeout }}
-{% if elasticsearch_discovery_zen_master_election_filter_client %}
-discovery.zen.master_election.filter_client: true
-{% else %}
-discovery.zen.master_election.filter_client: false
-{% endif %}
-{% if elasticsearch_discovery_zen_master_election_filter_data %}
-discovery.zen.master_election.filter_data: true
-{% else %}
-discovery.zen.master_election.filter_data: false
-{% endif %}
-discovery.zen.minimum_master_nodes: {{ elasticsearch_discovery_zen_minimum_master_nodes }}
-discovery.zen.no_master_block: {{ elasticsearch_discovery_zen_no_master_block }}
+# Pass an initial list of hosts to perform discovery when new node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
 discovery.zen.ping.unicast.hosts: [{% for host in elasticsearch_discovery_zen_ping_unicast_hosts %}{%if not loop.last %}"{{ host }}", {% else %}"{{ host }}"{% endif %}{% endfor %}]
-discovery.zen.ping_timeout: {{ elasticsearch_discovery_zen_ping_timeout }}
-discovery.zen.publish_timeout: {{ elasticsearch_discovery_zen_publish_timeout }}
+#
+# Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
+#
+discovery.zen.minimum_master_nodes: {{ elasticsearch_discovery_zen_minimum_master_nodes }}
+#
+# For more information, consult the zen discovery module documentation.
 #
 # ---------------------------------- Gateway -----------------------------------
 #
-gateway.expected_data_nodes: {{ elasticsearch_gateway_expected_data_nodes }}
-gateway.expected_master_noders: {{ elasticsearch_gateway_expected_master_nodes }}
-gateway.expected_nodes: {{ elasticsearch_gateway_expected_nodes }}
-{% if elasticsearch_gateway_recover_after_data_nodes %}
-gateway.recover_after_data_nodes: {{ elasticsearch_gateway_recover_after_data_nodes }}
-{% endif %}
-{% if elasticsearch_gateway_recover_after_master_nodes %}
-gateway.recover_after_master_nodes: {{ elasticsearch_gateway_recover_after_master_nodes }}
-{% endif %}
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
 {% if elasticsearch_gateway_recover_after_nodes %}
 gateway.recover_after_nodes: {{ elasticsearch_gateway_recover_after_nodes }}
-{% endif %}
-{% if elasticsearch_gateway_expected_nodes or elasticsearch_gateway_expected_master_nodes or elasticsearch_gateway_expected_data_nodes %}
-gateway.recover_after_time: {{ elasticsearch_gateway_recover_after_time }}
-{% endif %}
-#
-# ---------------------------------- Indices -----------------------------------
-#
-{% if elasticsearch_indices_breaker_fielddata_limit %}
-indices.breaker.fielddata.limit: {{ elasticsearch_indices_breaker_fielddata_limit }}
-{% endif %}
-indices.breaker.fielddata.overhead: {{ elasticsearch_indices_breaker_fielddata_overhead }}
-{% if elasticsearch_indices_breaker_request_limit %}
-indices.breaker.request.limit: {{ elasticsearch_indices_breaker_request_limit }}
-{% endif %}
-indices.breaker.request.overhead: {{ elasticsearch_indices_breaker_request_overhead }}
-{% if elasticsearch_indices_breaker_total_limit %}
-indices.breaker.total.limit: {{ elasticsearch_indices_breaker_total_limit }}
-{% endif %}
-{% if elasticsearch_indices_fielddata_cache_size %}
-indices.fielddata.cache.size: {{ elasticsearch_indices_fielddata_cache_size }}
-{% endif %}
-indices.queries.cache.size: {{ elasticsearch_indices_queries_cache_size }}
-indices.memory.index_buffer_size: {{ elasticsearch_indices_memory_index_buffer_size }}
-{% if elasticsearch_indices_memory_max_index_buffer_size %}
-indices.memory.max_index_buffer_size: {{ elasticsearch_indices_memory_max_index_buffer_size }}
-{% endif %}
-indices.memory.min_index_buffer_size: {{ elasticsearch_indices_memory_min_index_buffer_size }}
-indices.memory.min_shard_index_buffer_size: {{ elasticsearch_indices_memory_min_shard_index_buffer_size }}
-{% if elasticsearch_indices_requests_cache_size %}
-indices.requests.cache.size: {{ elasticsearch_indices_requests_cache_size }}
-{% endif %}
-{% if elasticsearch_indices_requests_cache_expire %}
-indices.requests.cache.expire: {{ elasticsearch_indices_requests_cache_expire }}
-{% endif %}
-{% if elasticsearch_indices_recovery_compress %}
-indices.recovery.compress: true
 {% else %}
-indices.recovery.compress: false
+#gateway.recover_after_nodes: 3
 {% endif %}
-indices.recovery.concurrent_small_file_streams: {{ elasticsearch_indices_recovery_concurrent_small_file_streams }}
-indices.recovery.concurrent_streams: {{ elasticsearch_indices_recovery_concurrent_streams }}
-indices.recovery.file_chunk_size: {{ elasticsearch_indices_recovery_file_chunk_size }}
-indices.recovery.max_bytes_per_sec: {{ elasticsearch_indices_recovery_max_bytes_per_sec }}
-indices.recovery.translog_ops: {{ elasticsearch_indices_recovery_translog_ops }}
-indices.recovery.translog_size: {{ elasticsearch_indices_recovery_translog_size }}
-indices.ttl.bulk_size: {{ elasticsearch_indices_ttl_bulk_size }}
-indices.ttl.interval: {{ elasticsearch_indices_ttl_interval }}
+#
+# For more information, consult the gateway module documentation.
 #
 # ---------------------------------- Various -----------------------------------
 #

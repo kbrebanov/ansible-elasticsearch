@@ -7,6 +7,13 @@
 # Elasticsearch home directory
 ES_HOME={{ elasticsearch_home_dir }}
 
+# Elasticsearch Java path
+{% if elasticsearch_java_home %}
+JAVA_HOME={{ elasticsearch_java_home }}
+{% else %}
+#JAVA_HOME=
+{% endif %}
+
 # Elasticsearch configuration directory
 CONF_DIR={{ elasticsearch_conf_dir }}
 
@@ -19,24 +26,6 @@ LOG_DIR={{ elasticsearch_log_dir }}
 # Elasticsearch PID directory
 PID_DIR={{ elasticsearch_pid_dir }}
 
-# Heap size defaults to 256m min, 1g max
-# Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
-ES_HEAP_SIZE={{ elasticsearch_heap_size }}
-
-# Heap new generation
-{% if elasticsearch_heap_newsize %}
-ES_HEAP_NEWSIZE={{ elasticsearch_heap_newsize }}
-{% else %}
-#ES_HEAP_NEWSIZE=
-{% endif %}
-
-# Maximum direct memory
-{% if elasticsearch_direct_size %}
-ES_DIRECT_SIZE={{ elasticsearch_direct_size }}
-{% else %}
-#ES_DIRECT_SIZE=
-{% endif %}
-
 # Additional Java OPTS
 {% if elasticsearch_java_opts %}
 ES_JAVA_OPTS={{ elasticsearch_java_opts }}
@@ -46,13 +35,10 @@ ES_JAVA_OPTS={{ elasticsearch_java_opts }}
 
 # Configure restart on package upgrade (true, every other setting will lead to not restarting)
 {% if elasticsearch_restart_on_upgrade %}
-ES_RESTART_ON_UPGRADE=true
+RESTART_ON_UPGRADE=true
 {% else %}
-ES_RESTART_ON_UPGRADE=false
+RESTART_ON_UPGRADE=false
 {% endif %}
-
-# Path to the GC log file
-ES_GC_LOG_FILE={{ elasticsearch_gc_log_file }}
 
 ################################
 # Elasticsearch service
